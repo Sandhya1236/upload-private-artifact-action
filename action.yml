@@ -11,6 +11,16 @@ inputs:
   s3_bucket:
     description: S3 bucket name
     required: true
+  object_tag:
+    description: S3 Obeject tag for object retention, for example, "retention=7d" for artifacts kept for 7 days in the S3 bucket
+    required: true
+    default: 'retention=30d'
+  build_type:
+    description: Workflow type such as Pull Request or Push Build on a Branch
+    required: true
+  build_branch:
+    description: A build artifacts branch
+    required: true
   fileserver_url:
     description: URL used by clients to download content from the file server
     required: false
