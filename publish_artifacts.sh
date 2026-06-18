@@ -8,7 +8,21 @@ if ! aws sts get-caller-identity >/dev/null 2>&1; then
 fi
 
 # Step 2: Upload artifacts
-aws s3 cp "$INPUT_PATH" "s3://$INPUT_S3_BUCKET/$INPUT_DESTINATION" --recursive --progress-frequency 30
+#aws s3 cp "$INPUT_PATH" "s3://$INPUT_S3_BUCKET/$INPUT_DESTINATION" --recursive --progress-frequency 30
+
+# Loop through all files recursively
+find "$INPUT_PATH" -type f | while read file; do
+    # Remove base path to preserve relative structure
+    relative_path="${file#$INPUT_PATH/}"
+
+    echo "Uploading: $relative_path"
+
+    aws s3api put-object \
+        --bucket "$INPUT_S3_BUCKET" \
+        --key "$INPUT_DESTINATION$relative_path" \
+        --body "$file" \
+        --tagging "$INPUT_OBJECT_TAG&$INPUT_BUILD_BRANCH&$INPUT_BUILD_TYPE"
+done
 
 # Step 3: Publish fileserver URL containing the artifacts
 output_file="${GITHUB_OUTPUT}"
