@@ -26,6 +26,9 @@ jobs:
           path: ./build
           s3_bucket: qcom-prd-gh-artifacts
           destination: unit-test/${{ github.run_id }}-${{ github.run_attempt }}/
+          object_tag: 'retention=7d'
+          build_type: 'build_type=unitTest'
+          build_branch: 'build_branch=aws'
 
   unit-test-container:
     runs-on: [self-hosted, qcom-u2404, arm64]
@@ -46,3 +49,6 @@ jobs:
           s3_bucket: qcom-prd-gh-artifacts
           destination: unit-test/${{ github.run_id }}-${{ github.run_attempt }}/
           path: ./build
+          object_tag: 'retention=7d'
+          build_type: 'build_type=unitTestContainer'
+          build_branch: 'build_branch=aws'
