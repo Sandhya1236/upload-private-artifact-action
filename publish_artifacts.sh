@@ -12,11 +12,14 @@ aws s3 cp "$INPUT_PATH" "s3://$INPUT_S3_BUCKET/$INPUT_DESTINATION" --recursive -
 
 # Step 3: Tag already upload artifacts
 #Validate TAGs
+for tag in "$INPUT_OBJECT_TAG" "$INPUT_BUILD_BRANCH" "$INPUT_BUILD_TYPE"; do  
+  if [[ -z "$tag" ]]; then
+    echo "INFO: Required TAG variable is not set, skipping"
+    continue
+  fi
 
-for tag in "$INPUT_OBJECT_TAG" "$INPUT_BUILD_BRANCH" "$INPUT_BUILD_TYPE"; do
   if [[ "$tag" != *=* ]]; then
-    echo "Invalid tag format: $tag"
-    exit 1
+    echo "WARNING: Invalid tag format: $tag, The TAG should be in the form of key=value"    
   fi
 done
 
